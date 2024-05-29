@@ -22,16 +22,19 @@ public class App {
             config.fileRenderer(new JavalinJte());
         });
         //set handlers
+        app.get("/", ctx -> {
+            var start = "Hello!";
+            ctx.render("startPage.jte", TemplateUtil.model("start", start));
+        });
         app.get("/courses", ctx -> {
             var courses = Stream.of(course1, course2, course3)
-                    .map(c -> c.getId().intValue())
+                    .map(Course::getId)
                     .sorted()
                     .map(String::valueOf)
-                    .collect(Collectors.joining(" or "));
-            ctx.result("Enter 'course/' followed by course id number."
-                    + "\nAvailable courses are:\n" + courses);
+                    .toList();
+            ctx.render("coursesPage.jte", TemplateUtil.model("courses", courses));
         });
-        app.get("/course/{id}", ctx -> {
+        app.get("/courses/{id}", ctx -> {
             //get path parameter id
             var id = ctx.pathParamAsClass("id", Long.class)
                     .getOrThrow((a) -> new NotFoundResponse("Not a number! Enter course id number."));
@@ -39,7 +42,7 @@ public class App {
             var course = Stream.of(course1, course2, course3)
                     .filter(c -> c.getId().equals(id))
                             .findFirst().orElseThrow(() -> new NotFoundResponse("No such course!"));
-            ctx.render("index.jte", TemplateUtil.model("course", course));
+            ctx.render("coursePage.jte", TemplateUtil.model("course", course));
         });
         //start app on port 7070
         app.start(7070);
