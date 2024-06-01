@@ -16,7 +16,11 @@
 <body class="p-4">
 <header>
     <h2>Welcome to my site 🚲</h2>
-    <a href="/" class="p-4">Main page.</a>
+    <a href="/" class="p-4">Main page</a>
+    <a href="/users" class="p-4">Users</a>
+    <a href="/courses" class="p-4">Courses</a>
+    <a href="/users/new" class="p-4">Register user</a>
+    <a href="/courses/new" class="p-4">Create course</a>
 </header>
 <main>
     ${content}

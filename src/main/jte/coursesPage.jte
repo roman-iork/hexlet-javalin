@@ -1,15 +1,23 @@
 @import java.util.List
+
 @param List<String> courses
 
 @template.layout.site(content = @`
+    <form action="/courses/del" method="post" class="p-4 pb-2">
+        <label>
+            <p>Deletion</p>
+            <input type="text" name="name" required placeholder="name">
+        </label>
+        <input type="submit" value="Well, delete the course!">
+    </form>
     <div class="p-4">
-        <p>Choose appropriate courses</p>
-        <p>Available courses are:</p>
-        @for(var id : courses)
+        @if(!courses.isEmpty())
             <div>
-                <a href="courses/${id}">Course number ${id}</a>
+                @for(var name : courses)
+                    <p>${name}</p>
+                @endfor
             </div>
-        @endfor
+        @endif
     </div>
 `
 )
