@@ -1,3 +1,4 @@
+@import org.example.NamedRoutes
 @import org.example.dto.BuildCoursePage
 
 @param BuildCoursePage page
@@ -12,7 +13,7 @@
     @endif
     <div class="p-4 pt-0">
         <p>Voila ici vous pouves creer une cours neuveux:</p>
-        <form action="/courses" method="post" class="pb-3">
+        <form action="${NamedRoutes.pathCourses()}" method="post" class="pb-3">
             <label>
                 <p>Name</p>
                 <input type="text" name="name" required placeholder="name" value="${page.getName()}">

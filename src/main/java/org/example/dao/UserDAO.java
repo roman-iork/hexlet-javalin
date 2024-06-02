@@ -1,6 +1,7 @@
 package org.example.dao;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.example.User;
 
 import java.sql.Connection;

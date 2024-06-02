@@ -1,4 +1,5 @@
 @import io.javalin.validation.ValidationError
+@import org.example.NamedRoutes
 @import org.example.dto.BuildUserPage
 @import java.util.List
 
@@ -14,7 +15,7 @@
     @endif
     <div class="p-4 pt-0">
         <p>Here you can register a new user:</p>
-        <form action="/users" method="post" class="pb-3">
+        <form action="${NamedRoutes.pathUsers()}" method="post" class="pb-3">
             <label>
                 <p>Name</p>
                 <input type="text" name="firstName" required placeholder="first name" value="${page.getFirst_name()}">
