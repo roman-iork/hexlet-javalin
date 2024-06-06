@@ -1,15 +1,23 @@
-@import org.example.User
+@import org.example.NamedRoutes
+@import org.example.dto.UserPage
 
-@param User user
+@param UserPage page
 
 @template.layout.site(
     content = @`
         <div class="p-4">
-            @if(user.getId().equals(1L))
-            <p>Attention! Super important!</p>
-            @endif
-            <p>${user.getFirstName()}</p>
-            <p>${user.getEmail()}</p>
+            <p>${page.getUser().getFirstName()}</p>
+            <p>${page.getUser().getEmail()}</p>
+        </div>
+        <div>
+            <form action="${NamedRoutes.pathUsers() + "/" + page.getUser().getFirstName() + "/del"}" method="post">
+                <input type="submit" value="Delete user">
+            </form>
+        </div>
+        <div>
+            <form action="${NamedRoutes.pathUsers() + "/" + page.getUser().getFirstName() + "/edit"}" method="get">
+                <input type="submit" value="Edit user">
+            </form>
         </div>
     `
 )

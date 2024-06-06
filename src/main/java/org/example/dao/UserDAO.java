@@ -1,7 +1,7 @@
 package org.example.dao;
 
+import io.javalin.http.NotFoundResponse;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import org.example.User;
 
 import java.sql.Connection;
@@ -29,7 +29,16 @@ public class UserDAO {
                     throw new SQLException("no id from users returned");
                 }
             }
-        } else {}
+        } else {
+            var sql = "UPDATE users SET first_name = ?, email = ?, password = ? WHERE id = ?";
+            try (var preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, user.getFirstName());
+                preparedStatement.setString(2, user.getEmail());
+                preparedStatement.setString(3, user.getPassword());
+                preparedStatement.setLong(4, user.getId());
+                preparedStatement.executeUpdate();
+            }
+        }
     }
 
     public List<String> receiveAll() throws SQLException {
@@ -50,5 +59,26 @@ public class UserDAO {
             preparedStatement.setString(1, firstName);
             preparedStatement.executeUpdate();
         }
+    }
+
+    public User find(String name) throws SQLException {
+        User user = null;
+        var sql = "SELECT * FROM users WHERE first_name = ?";
+        try (var preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, name);
+            var resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                var id = resultSet.getLong(1);
+                var firstName = resultSet.getString("first_name");
+                var email = resultSet.getString("email");
+                var password = resultSet.getString("password");
+                user = new User(firstName, email, password);
+                user.setId(id);
+            }
+        }
+        if (user == null) {
+            throw new NotFoundResponse("No user with such name!");
+        }
+        return user;
     }
 }

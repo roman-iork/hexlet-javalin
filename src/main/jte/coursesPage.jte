@@ -1,21 +1,16 @@
 @import org.example.NamedRoutes
-@import java.util.List
+@import org.example.dto.CoursesPage
 
-@param List<String> courses
+@param CoursesPage page
 
 @template.layout.site(content = @`
-    <form action="${NamedRoutes.pathCoursesDel()}" method="post" class="p-4 pb-2 pt-1">
-        <label>
-            <p>Deletion</p>
-            <input type="text" name="name" required placeholder="name">
-        </label>
-        <input type="submit" value="Well, delete the course!">
-    </form>
     <div class="p-4">
-        @if(!courses.isEmpty())
+        @if(!page.getCourses().isEmpty())
             <div>
-                @for(var name : courses)
-                    <p>${name}</p>
+                @for(var course : page.getCourses())
+                    <p>
+                        <a href="${NamedRoutes.pathCourse(course.getId())}">${course.getName()}</a>
+                    </p>
                 @endfor
             </div>
         @endif
