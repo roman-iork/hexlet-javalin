@@ -7,9 +7,9 @@
     <div class="p-4">
         @if(!users.getUsers().isEmpty())
             <div>
-                @for(var name : users.getUsers())
+                @for(var user : users.getUsers())
                     <p>
-                        <a href="${NamedRoutes.pathUsers() + "/" + name}">${name}</a>
+                        <a href="${NamedRoutes.pathUsers() + "/" + user.getId()}">${user.getFirstName()}</a>
                     </p>
                 @endfor
             </div>

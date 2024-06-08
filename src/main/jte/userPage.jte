@@ -10,12 +10,12 @@
             <p>${page.getUser().getEmail()}</p>
         </div>
         <div>
-            <form action="${NamedRoutes.pathUsers() + "/" + page.getUser().getFirstName() + "/del"}" method="post">
+            <form action="${NamedRoutes.pathUsers() + "/" + page.getUser().getId() + "/del"}" method="post">
                 <input type="submit" value="Delete user">
             </form>
         </div>
         <div>
-            <form action="${NamedRoutes.pathUsers() + "/" + page.getUser().getFirstName() + "/edit"}" method="get">
+            <form action="${NamedRoutes.pathUsers() + "/" + page.getUser().getId() + "/edit"}" method="get">
                 <input type="submit" value="Edit user">
             </form>
         </div>

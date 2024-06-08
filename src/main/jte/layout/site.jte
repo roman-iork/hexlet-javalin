@@ -22,6 +22,8 @@
     <a href="${NamedRoutes.pathCourses()}" class="p-4">Courses</a>
     <a href="${NamedRoutes.pathUsersNew()}" class="p-4">Register user</a>
     <a href="${NamedRoutes.pathCoursesNew()}" class="p-4">Create course</a>
+    <a href="${NamedRoutes.pathSessionBuild()}" class="p-4">Log in</a>
+    <a href="${NamedRoutes.pathSessionOut()}" class="p-4">Log out</a>
 </header>
 <main>
     ${content}

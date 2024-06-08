@@ -23,7 +23,12 @@ public class CoursesController {
     public static void index(Context ctx, CourseDAO courseDAO) throws SQLException {
         var courses = courseDAO.receiveAll();
         var page = new CoursesPage(courses);
-        ctx.render("coursesPage.jte", TemplateUtil.model("page", page));
+        var auth = ctx.sessionAttribute("auth");
+        if (auth != null) {
+            ctx.render("coursesPage.jte", TemplateUtil.model("page", page));
+        } else {
+            ctx.redirect(NamedRoutes.pathSessionBuild());
+        }
     }
 
     public static void delete(Context ctx, CourseDAO courseDAO) throws SQLException {
@@ -57,8 +62,13 @@ public class CoursesController {
     }
 
     public static void build(Context ctx) {
-        var page = new BuildCoursePage();
-        ctx.render("courseBuildPage.jte", TemplateUtil.model("page", page));
+        var auth = ctx.sessionAttribute("auth");
+        if (auth != null) {
+            var page = new BuildCoursePage();
+            ctx.render("courseBuildPage.jte", TemplateUtil.model("page", page));
+        } else {
+            ctx.redirect(NamedRoutes.pathSessionBuild());
+        }
     }
 
     public static void create(Context ctx, CourseDAO courseDAO) throws SQLException{

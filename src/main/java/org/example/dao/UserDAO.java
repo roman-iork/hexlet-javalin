@@ -41,13 +41,19 @@ public class UserDAO {
         }
     }
 
-    public List<String> receiveAll() throws SQLException {
-        var users = new ArrayList<String>();
+    public List<User> receiveAll() throws SQLException {
+        var users = new ArrayList<User>();
         var sql = "SELECT * FROM users";
         try (var statement = connection.createStatement()) {
             var resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
-                users.add(resultSet.getString("first_name"));
+                var id = resultSet.getLong("id");
+                var name = resultSet.getString("first_name");
+                var email = resultSet.getString("email");
+                var password = resultSet.getString("password");
+                var user = new User(name, email, password);
+                user.setId(id);
+                users.add(user);
             }
         }
         return users;
@@ -61,14 +67,13 @@ public class UserDAO {
         }
     }
 
-    public User find(String name) throws SQLException {
+    public User find(Long id) throws SQLException {
         User user = null;
-        var sql = "SELECT * FROM users WHERE first_name = ?";
+        var sql = "SELECT * FROM users WHERE id = ?";
         try (var preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, name);
+            preparedStatement.setLong(1, id);
             var resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                var id = resultSet.getLong(1);
                 var firstName = resultSet.getString("first_name");
                 var email = resultSet.getString("email");
                 var password = resultSet.getString("password");
@@ -80,5 +85,40 @@ public class UserDAO {
             throw new NotFoundResponse("No user with such name!");
         }
         return user;
+    }
+
+    public User find(String name) throws SQLException {
+        User user = null;
+        var sql = "SELECT * FROM users WHERE first_name = ?";
+        try (var preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, name);
+            var resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                var id = resultSet.getLong("id");
+                var email = resultSet.getString("email");
+                var password = resultSet.getString("password");
+                user = new User(name, email, password);
+                user.setId(id);
+            }
+        }
+        if (user == null) {
+            throw new NotFoundResponse("No user with such name!");
+        }
+        return user;
+    }
+
+    public boolean contains(String firstName) {
+        var sql = "SELECT first_name FROM users";
+        var names = new ArrayList<String>();
+        try (var statement = connection.createStatement()) {
+            var resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                var name = resultSet.getString(1);
+                names.add(name);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return names.contains(firstName);
     }
 }

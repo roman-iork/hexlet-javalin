@@ -16,11 +16,17 @@ public class UsersController {
         var users = userDAO.receiveAll();
         var usersPage = new UsersPage(users);
         var page = new DelUserPage();
-        ctx.render("usersPage.jte", model("users", usersPage, "page", page));
+        var auth = ctx.sessionAttribute("auth");
+        System.out.println(auth);
+        if (auth != null) {
+            ctx.render("usersPage.jte", model("users", usersPage, "page", page));
+        } else {
+            ctx.redirect(NamedRoutes.pathSessionBuild());
+        }
     }
     public static void show(Context ctx, UserDAO userDAO) throws SQLException {
-        var firstName = ctx.pathParam("firstName");
-        var user = userDAO.find(firstName);
+        var id = ctx.pathParamAsClass("id", Long.class).get();
+        var user = userDAO.find(id);
         var page = new UserPage(user);
         ctx.render("userPage.jte", model("page", page));
     }
@@ -28,11 +34,16 @@ public class UsersController {
         var page = new BuildUserPage();
         ctx.render("userBuildPage.jte", TemplateUtil.model("page", page));
     }
+
     public static void create(Context ctx, UserDAO userDAO) throws SQLException {
-        var firstName = StringUtils.capitalize(ctx.formParam("firstName").trim());
         var email = ctx.formParam("email").trim().toLowerCase();
         try {
             var passwordConfirmation = ctx.formParam("passwordConfirmation");
+            var firstName = ctx.formParamAsClass("firstName", String.class)
+                    .check(nm -> !userDAO.contains(nm), "Such name already exists")
+                    .check(nm -> nm.equals(StringUtils.capitalize(nm.toLowerCase())), "Name should be in Lower case and Capitalised!")
+                    .get()
+                    .trim();
             var password = ctx.formParamAsClass("password", String.class)
                     .check(pswd -> pswd.equals(passwordConfirmation), "Passwords don't match, ups!")
                     .get();
@@ -40,18 +51,19 @@ public class UsersController {
             userDAO.save(newUser);
             ctx.redirect(NamedRoutes.pathUsers());
         } catch (ValidationException e) {
+            var firstName = ctx.formParam("firstName").trim();
             var page = new BuildUserPage(firstName, email, e.getErrors());
             ctx.render("userBuildPage.jte", TemplateUtil.model("page", page));
         }
     }
     public static void edit(Context ctx, UserDAO userDAO) throws SQLException {
-        var firstName = ctx.pathParam("firstName");
-        var page = new UserPage(userDAO.find(firstName));
+        var id = ctx.pathParamAsClass("id", Long.class).get();
+        var page = new UserPage(userDAO.find(id));
         ctx.render("userEditPage.jte", model("page", page));
     }
     public static void update(Context ctx, UserDAO userDAO) throws SQLException{
-        var firstName = ctx.pathParam("firstName");
-        var user = userDAO.find(firstName);
+        var id = ctx.pathParamAsClass("id", Long.class).get();
+        var user = userDAO.find(id);
         var newFirstName = ctx.formParam("firstName").isEmpty() ? user.getFirstName() : ctx.formParam("firstName");
         var newEmail = ctx.formParam("email").isEmpty() ? user.getEmail() : ctx.formParam("email");
         var newPassword = ctx.formParam("password").isEmpty() ? user.getPassword() : ctx.formParam("password");
@@ -59,21 +71,12 @@ public class UsersController {
         user.setEmail(newEmail);
         user.setPassword(newPassword);
         userDAO.save(user);
-        ctx.redirect(NamedRoutes.pathUsers() + "/" + newFirstName);
+        ctx.redirect(NamedRoutes.pathUsers() + "/" + user.getId());
     }
     public static void delete(Context ctx, UserDAO userDAO) throws SQLException {
-        try {
-            var usersNames = userDAO.receiveAll();
-            var firstName = StringUtils.capitalize(ctx.pathParamAsClass("firstName", String.class)
-                    .check(nm -> usersNames.contains(StringUtils.capitalize(nm.toLowerCase())), "No such user, o-ou!")
-                    .get().trim());
-            userDAO.delete(firstName);
-            ctx.redirect(NamedRoutes.pathUsers());
-        } catch (ValidationException e) {
-            var firstName = ctx.formParam("firstName").trim();
-            var usersPage = new UsersPage(userDAO.receiveAll());
-            var page = new DelUserPage(firstName, e.getErrors());
-            ctx.render("usersPage.jte", TemplateUtil.model("page", page, "users", usersPage));
-        }
+        var id = ctx.pathParamAsClass("id", Long.class).get();
+        var user = userDAO.find(id);
+        userDAO.delete(user.getFirstName());
+        ctx.redirect(NamedRoutes.pathUsers());
     }
 }

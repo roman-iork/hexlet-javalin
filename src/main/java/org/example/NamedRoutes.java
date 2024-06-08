@@ -13,7 +13,7 @@ public class NamedRoutes {
         return pathUser() + "/del";
     }
     public static String pathUser() {
-        return "/users/{firstName}";
+        return "/users/{id}";
     }
     public static String pathUserEdit() {
         return pathUser() + "/edit";
@@ -52,5 +52,16 @@ public class NamedRoutes {
     }
     public static String pathCourseUpdate(String id) {
         return pathCourse(id) + "/update";
+    }
+
+    //session
+    public static String pathSessionBuild() {
+        return "/session/build";
+    }
+    public static String pathSessionCheck() {
+        return "/session";
+    }
+    public static String pathSessionOut() {
+        return "/session";
     }
 }

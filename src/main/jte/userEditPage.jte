@@ -6,7 +6,7 @@
 @template.layout.site(
     content = @`
         <p>Here is a form for editing user called ${page.getUser().getFirstName()}</p>
-        <form action="${NamedRoutes.pathUsers() + "/" + page.getUser().getFirstName() + "/update"}" method="post">
+        <form action="${NamedRoutes.pathUsers() + "/" + page.getUser().getId() + "/update"}" method="post">
             <label>
                 First name
                 <input type="text" name="firstName" value="${page.getUser().getFirstName()}">

@@ -57,6 +57,10 @@ public class App {
         app.post(NamedRoutes.pathCoursesDel("{id}"), ctx -> CoursesController.delete(ctx, courseDAO));
         app.get(NamedRoutes.pathCourseEdit("{id}"), ctx -> CoursesController.edit(ctx, courseDAO));
         app.post(NamedRoutes.pathCourseUpdate("{id}"), ctx -> CoursesController.update(ctx, courseDAO));
+        //set handlers for session
+        app.get(NamedRoutes.pathSessionBuild(), SessionController::build);
+        app.post(NamedRoutes.pathSessionCheck(), ctx -> SessionController.check(ctx, userDAO));
+        app.get(NamedRoutes.pathSessionOut(), SessionController::out);
         //start app at port 7070
         app.start(7070);
     }
