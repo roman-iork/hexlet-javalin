@@ -58,6 +58,9 @@ public class NamedRoutes {
     public static String pathSessionBuild() {
         return "/session/build";
     }
+    public static String pathSessionBuildMain() {
+        return "/session/build/main";
+    }
     public static String pathSessionCheck() {
         return "/session";
     }

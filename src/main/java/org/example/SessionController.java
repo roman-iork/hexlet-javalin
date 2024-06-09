@@ -9,8 +9,15 @@ import org.example.dto.LoginPage;
 import java.sql.SQLException;
 
 public class SessionController {
+
     public static void build(Context ctx) {
         var page = new LoginPage();
+        ctx.render("loginPage.jte", TemplateUtil.model("page", page));
+    }
+
+    public static void buildMain(Context ctx) {
+        var page = new LoginPage();
+        ctx.sessionAttribute("path", "/");
         ctx.render("loginPage.jte", TemplateUtil.model("page", page));
     }
 
@@ -24,9 +31,9 @@ public class SessionController {
 
             ctx.formParamAsClass("password", String.class)
                     .check(etps -> etps.equals(validPsw), "Wrong password!").get();
-            String jsessionid = "123456789";
-            ctx.sessionAttribute("auth", jsessionid);
-            ctx.redirect("/");
+            ctx.sessionAttribute("auth", "done");
+            var path = ctx.sessionAttributeMap().get("path").toString();
+            ctx.redirect(path);
         } catch (ValidationException e) {
             var firstName = ctx.formParam("firstName");
             var page = new LoginPage(firstName, e.getErrors());

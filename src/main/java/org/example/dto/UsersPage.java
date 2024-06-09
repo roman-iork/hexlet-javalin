@@ -8,6 +8,6 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public class UsersPage {
+public class UsersPage extends BasePage {
     private List<User> users;
 }

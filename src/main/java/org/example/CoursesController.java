@@ -27,6 +27,7 @@ public class CoursesController {
         if (auth != null) {
             ctx.render("coursesPage.jte", TemplateUtil.model("page", page));
         } else {
+            ctx.sessionAttribute("path", NamedRoutes.pathCourses());
             ctx.redirect(NamedRoutes.pathSessionBuild());
         }
     }
@@ -67,6 +68,7 @@ public class CoursesController {
             var page = new BuildCoursePage();
             ctx.render("courseBuildPage.jte", TemplateUtil.model("page", page));
         } else {
+            ctx.sessionAttribute("path", NamedRoutes.pathCoursesNew());
             ctx.redirect(NamedRoutes.pathSessionBuild());
         }
     }

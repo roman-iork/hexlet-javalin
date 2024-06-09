@@ -14,13 +14,13 @@ public class UsersController {
 
     public static void index(Context ctx, UserDAO userDAO) throws SQLException {
         var users = userDAO.receiveAll();
-        var usersPage = new UsersPage(users);
-        var page = new DelUserPage();
+        var page = new UsersPage(users);
         var auth = ctx.sessionAttribute("auth");
-        System.out.println(auth);
         if (auth != null) {
-            ctx.render("usersPage.jte", model("users", usersPage, "page", page));
+            page.setFlash(ctx.consumeSessionAttribute("flash"));
+            ctx.render("usersPage.jte", model("page", page));
         } else {
+            ctx.sessionAttribute("path", NamedRoutes.pathUsers());
             ctx.redirect(NamedRoutes.pathSessionBuild());
         }
     }
@@ -49,10 +49,13 @@ public class UsersController {
                     .get();
             var newUser = new User(firstName, email, password);
             userDAO.save(newUser);
+            ctx.sessionAttribute("flash", "User was successfully added");
+            ctx.sessionAttribute("auth", "done");
             ctx.redirect(NamedRoutes.pathUsers());
         } catch (ValidationException e) {
             var firstName = ctx.formParam("firstName").trim();
             var page = new BuildUserPage(firstName, email, e.getErrors());
+            page.setFlash("User was NOT added!");
             ctx.render("userBuildPage.jte", TemplateUtil.model("page", page));
         }
     }

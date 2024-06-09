@@ -1,7 +1,9 @@
 @import gg.jte.Content
 @import org.example.NamedRoutes
+@import org.example.dto.BasePage
 
 @param Content content
+@param BasePage page = null
 
 <!doctype html>
 <html lang="en">
@@ -15,6 +17,13 @@
           crossorigin="anonymous">
 </head>
 <body class="p-4">
+@if(page != null && page.getFlash() != null)
+    @if(page.getFlash().equals("User was successfully added"))
+        <p style="background: #ccf7bc; font-size: 20px; text-align: center">${page.getFlash()}</p>
+    @else
+        <p style="background: #ffc58f; font-size: 20px; text-align: center">${page.getFlash()}</p>
+    @endif
+@endif
 <header>
     <h2>Welcome to my site 🚲</h2>
     <a href="/" class="p-4">Main page</a>
@@ -22,7 +31,7 @@
     <a href="${NamedRoutes.pathCourses()}" class="p-4">Courses</a>
     <a href="${NamedRoutes.pathUsersNew()}" class="p-4">Register user</a>
     <a href="${NamedRoutes.pathCoursesNew()}" class="p-4">Create course</a>
-    <a href="${NamedRoutes.pathSessionBuild()}" class="p-4">Log in</a>
+    <a href="${NamedRoutes.pathSessionBuildMain()}" class="p-4">Log in</a>
     <a href="${NamedRoutes.pathSessionOut()}" class="p-4">Log out</a>
 </header>
 <main>

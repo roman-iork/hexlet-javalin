@@ -11,7 +11,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class BuildUserPage {
+public class BuildUserPage extends BasePage {
     private String first_name;
     private String email;
     private Map<String, List<ValidationError<Object>>> errors;
