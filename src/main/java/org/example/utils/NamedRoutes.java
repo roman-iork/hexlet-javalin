@@ -1,6 +1,10 @@
-package org.example;
+package org.example.utils;
 
 public class NamedRoutes {
+    //root
+    public static String pathRoot() {
+        return "/";
+    }
 
     //users
     public static String pathUsers() {

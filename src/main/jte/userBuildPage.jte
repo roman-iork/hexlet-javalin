@@ -1,5 +1,5 @@
 @import io.javalin.validation.ValidationError
-@import org.example.NamedRoutes
+@import org.example.utils.NamedRoutes
 @import org.example.dto.BuildUserPage
 @import java.util.List
 

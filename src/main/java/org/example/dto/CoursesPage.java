@@ -7,6 +7,6 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public class CoursesPage {
+public class CoursesPage extends BasePage {
     private List<Course> courses;
 }

@@ -1,9 +1,11 @@
-package org.example;
+package org.example.controllers;
 import io.javalin.http.Context;
 import io.javalin.rendering.template.TemplateUtil;
 import io.javalin.validation.ValidationException;
 import org.apache.commons.lang3.StringUtils;
-import org.example.dao.UserDAO;
+import org.example.utils.NamedRoutes;
+import org.example.User;
+import org.example.dao.UserRepository;
 import static io.javalin.rendering.template.TemplateUtil.model;
 
 import org.example.dto.*;
@@ -12,7 +14,7 @@ import java.sql.SQLException;
 
 public class UsersController {
 
-    public static void index(Context ctx, UserDAO userDAO) throws SQLException {
+    public static void index(Context ctx, UserRepository userDAO) throws SQLException {
         var users = userDAO.receiveAll();
         var page = new UsersPage(users);
         var auth = ctx.sessionAttribute("auth");
@@ -24,7 +26,7 @@ public class UsersController {
             ctx.redirect(NamedRoutes.pathSessionBuild());
         }
     }
-    public static void show(Context ctx, UserDAO userDAO) throws SQLException {
+    public static void show(Context ctx, UserRepository userDAO) throws SQLException {
         var id = ctx.pathParamAsClass("id", Long.class).get();
         var user = userDAO.find(id);
         var page = new UserPage(user);
@@ -35,7 +37,7 @@ public class UsersController {
         ctx.render("userBuildPage.jte", TemplateUtil.model("page", page));
     }
 
-    public static void create(Context ctx, UserDAO userDAO) throws SQLException {
+    public static void create(Context ctx, UserRepository userDAO) throws SQLException {
         var email = ctx.formParam("email").trim().toLowerCase();
         try {
             var passwordConfirmation = ctx.formParam("passwordConfirmation");
@@ -49,7 +51,7 @@ public class UsersController {
                     .get();
             var newUser = new User(firstName, email, password);
             userDAO.save(newUser);
-            ctx.sessionAttribute("flash", "User was successfully added");
+            ctx.sessionAttribute("flash", "User was successfully added!");
             ctx.sessionAttribute("auth", "done");
             ctx.redirect(NamedRoutes.pathUsers());
         } catch (ValidationException e) {
@@ -59,12 +61,12 @@ public class UsersController {
             ctx.render("userBuildPage.jte", TemplateUtil.model("page", page));
         }
     }
-    public static void edit(Context ctx, UserDAO userDAO) throws SQLException {
+    public static void edit(Context ctx, UserRepository userDAO) throws SQLException {
         var id = ctx.pathParamAsClass("id", Long.class).get();
         var page = new UserPage(userDAO.find(id));
         ctx.render("userEditPage.jte", model("page", page));
     }
-    public static void update(Context ctx, UserDAO userDAO) throws SQLException{
+    public static void update(Context ctx, UserRepository userDAO) throws SQLException{
         var id = ctx.pathParamAsClass("id", Long.class).get();
         var user = userDAO.find(id);
         var newFirstName = ctx.formParam("firstName").isEmpty() ? user.getFirstName() : ctx.formParam("firstName");
@@ -76,7 +78,7 @@ public class UsersController {
         userDAO.save(user);
         ctx.redirect(NamedRoutes.pathUsers() + "/" + user.getId());
     }
-    public static void delete(Context ctx, UserDAO userDAO) throws SQLException {
+    public static void delete(Context ctx, UserRepository userDAO) throws SQLException {
         var id = ctx.pathParamAsClass("id", Long.class).get();
         var user = userDAO.find(id);
         userDAO.delete(user.getFirstName());

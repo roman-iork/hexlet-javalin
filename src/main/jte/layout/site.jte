@@ -1,5 +1,5 @@
 @import gg.jte.Content
-@import org.example.NamedRoutes
+@import org.example.utils.NamedRoutes
 @import org.example.dto.BasePage
 
 @param Content content
@@ -18,7 +18,7 @@
 </head>
 <body class="p-4">
 @if(page != null && page.getFlash() != null)
-    @if(page.getFlash().equals("User was successfully added"))
+    @if(page.getFlash().equals("User was successfully added!") || page.getFlash().equals("Course was successfully created!"))
         <p style="background: #ccf7bc; font-size: 20px; text-align: center">${page.getFlash()}</p>
     @else
         <p style="background: #ffc58f; font-size: 20px; text-align: center">${page.getFlash()}</p>

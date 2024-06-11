@@ -1,9 +1,9 @@
-package org.example;
+package org.example.controllers;
 
 import io.javalin.http.Context;
 import io.javalin.rendering.template.TemplateUtil;
 import io.javalin.validation.ValidationException;
-import org.example.dao.UserDAO;
+import org.example.dao.UserRepository;
 import org.example.dto.LoginPage;
 
 import java.sql.SQLException;
@@ -21,7 +21,7 @@ public class SessionController {
         ctx.render("loginPage.jte", TemplateUtil.model("page", page));
     }
 
-    public static void check(Context ctx, UserDAO userDAO) throws SQLException {
+    public static void check(Context ctx, UserRepository userDAO) throws SQLException {
         try {
             var firstName = ctx.formParamAsClass("firstName", String.class)
                     .check(userDAO::contains, "No such user!")

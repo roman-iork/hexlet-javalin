@@ -1,46 +1,28 @@
 package org.example;
 
-import io.javalin.Javalin;
-import io.javalin.rendering.template.JavalinJte;
-import io.javalin.rendering.template.TemplateUtil;
-import org.example.dao.CourseDAO;
-import org.example.dao.UserDAO;
-import org.example.dto.MainPage;
+import org.example.controllers.CoursesController;
+import org.example.controllers.RootController;
+import org.example.controllers.SessionController;
+import org.example.controllers.UsersController;
+import org.example.dao.BaseRepository;
+import org.example.dao.CourseRepository;
+import org.example.dao.UserRepository;
+import org.example.utils.NamedRoutes;
 
 
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 
 public class App {
-    private static final String url = "";
-    private static final String username = "";
-    private static final String password = "";
 
     public static void main(String[] args) throws SQLException {
-        //create connection
-        var connection = DriverManager.getConnection(url, username, password);
-        //create userDAO
-        var userDAO = new UserDAO(connection);
-        var courseDAO = new CourseDAO(connection);
-        //now make Javalin application:
-        //configure app
-        var app = Javalin.create(config -> {
-            config.bundledPlugins.enableDevLogging();
-            config.fileRenderer(new JavalinJte());
-        });
+        //create applecation
+        var app = BaseRepository.getApp();
+        //create DAOs
+        var userDAO = new UserRepository();
+        var courseDAO = new CourseRepository();
         //set handlers for start page
-        app.get("/", ctx -> {
-            var date = ctx.cookie("date");
-            var page = new MainPage(date);
-            ctx.render("startPage.jte", TemplateUtil.model("page", page));
-            var currentDate = LocalDateTime.now();
-            var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy___HH:mm:ss");
-            var curDateFrmtd = currentDate.format(formatter);
-            ctx.cookie("date", curDateFrmtd);
-        });
+        app.get(NamedRoutes.pathRoot(), RootController::showRoot);
         //set handlers for users
         app.get(NamedRoutes.pathUsers(), ctx -> UsersController.index(ctx, userDAO));
         app.get(NamedRoutes.pathUsersNew(), UsersController::build);

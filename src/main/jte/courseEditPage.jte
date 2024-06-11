@@ -1,4 +1,4 @@
-@import org.example.NamedRoutes
+@import org.example.utils.NamedRoutes
 @import org.example.dto.CoursePage
 
 @param CoursePage page
