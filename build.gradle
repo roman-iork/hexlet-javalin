@@ -5,6 +5,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
     id 'application'
     id "io.freefair.lombok" version "8.6"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 application {
@@ -28,8 +29,7 @@ dependencies {
     implementation 'org.apache.commons:commons-text:1.12.0'
     implementation 'org.apache.commons:commons-lang3:3.14.0'
     implementation 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:1.1'
-    implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.3'
-    implementation('com.h2database:h2:2.2.224')
+    implementation 'com.h2database:h2:2.2.224'
     implementation('com.zaxxer:HikariCP:5.1.0')
 }
 
